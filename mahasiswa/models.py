@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import datetime
+from django.core.files import File
+from django.conf import settings
 from mitra.models import Mitra
 from dosen.models import Dosen
 
@@ -18,5 +20,8 @@ class Pkl(models.Model):
     def tanggal_selesai_format(self):
         return self.tanggal_selesai.strftime('%Y-%m-%d')
 
+class Reject(models.Model):
+    catatan = models.TextField(max_length=1500, help_text="maksimal 1500 karakter")
+    reject = models.BooleanField(default=False)
 
 

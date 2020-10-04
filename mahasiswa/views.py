@@ -42,7 +42,8 @@ def index(req):
 def index_staf(req):
     tasks = models.Pkl.objects.filter(owner=req.user)
     form_input = forms.PklForm()
-    
+    form_reject = forms.RejectForm()
+
     if req.POST:
         form_input = forms.PklForm(req.POST, req.FILES)
         if form_input.is_valid():
@@ -57,6 +58,7 @@ def index_staf(req):
         tasks = models.Pkl.objects.all()
     return render(req, 'mahasiswas/index.html',{
         'data': tasks,  
+        'form_reject': form_reject,
     })
 
 
@@ -159,9 +161,23 @@ def approve(req, id):
     a = models.Pkl.objects.filter(pk=id).update(approve=True)
     return redirect('/mahasiswas')
 
-def approve_batal(req, id):
-    a = models.Pkl.objects.filter(pk=id).update(approve=False)
-    return redirect('/mahasiswas')
+#def approve_batal(req, id):
+    #a = models.Pkl.objects.filter(pk=id).update(approve=False)
+    #return redirect('/mahasiswas')
+
+def reject(req,id):
+    tasks_reject = models.Reject.objects.filter(pk=id).update(reject=False)
+    if req.POST:
+        form_reject = forms.RejectForm(req.POST)
+        if form_reject.is_valid():
+            form_reject.save()
+        #a = models.Pkl.objects.filter(pk=id).update(catatan=req.POST['catatan'])
+            return redirect('/mahasiswas')
+        #a = models.Reject.objects.filter(pk=id).first(reject=False)
+        return render(req, 'mahasiswas/index.html', {
+        'form_reject' : form_reject,
+        'data': tasks_reject,
+    })
 
 def index_dosen(req):
     group = req.user.groups.first() #mengambil group user
